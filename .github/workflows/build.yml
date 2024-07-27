@@ -22,18 +22,18 @@ jobs:
         submodules: 'recursive'
 
     - name: Install 7zip (Windows)
-      if: ${{ runner.os }} == 'Windows'
+      if: ${{ matrix.os }} == 'windows-latest'
       run: choco install 7zip
 
     - name: Install Dependencies
-      if: ${{ runner.os }} == 'Linux'
+      if: ${{ matrix.os }} == 'ubuntu-latest'
       run: |
         sudo apt-get update -qq
         sudo apt-get install -y \
           libx11-dev libxcursor-dev libxi-dev
 
     - name: ccache
-      if: ${{ runner.os }} == 'Linux'
+      if: ${{ matrix.os }} == 'ubuntu-latest'
       uses: hendrikmuhs/ccache-action@v1
       with:
         key: ${{ matrix.os }}-${{ matrix.enable_ui }}
@@ -41,11 +41,11 @@ jobs:
     - uses: seanmiddleditch/gha-setup-ninja@master
 
     - uses: ilammy/msvc-dev-cmd@v1
-      if: ${{ runner.os }} == 'Windows'
+      if: ${{ matrix.os }} == 'windows-latest'
 
     - name: Generating Makefiles
       run: |
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
+        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           export enable_ccache=off
         else
           export enable_ccache=on
